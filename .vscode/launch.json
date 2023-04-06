@@ -1,0 +1,48 @@
+{
+    "version": "0.5.0",
+    "configurations": [
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Crawler API",
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+              ],
+            "args": [
+                "${workspaceFolder}/src/main.ts"
+            ],
+            "runtimeArgs": [
+                "--nolazy",
+                "-r",
+                "ts-node/register",
+                "-r",
+                "tsconfig-paths/register"
+            ],
+            "sourceMaps": true,
+            "env": {"NODE_ENV": "development", "NODE_CONFIG_DIR": "${workspaceFolder}"},
+            "cwd": "${workspaceRoot}",
+            "outputCapture": "std",
+            "skipFiles": ["<node_internals>/**", "${workspaceRoot}/node_modules/**/*.js"],
+        },
+        {
+            "name": "Debug Jest Tests",
+            "type": "pwa-node",
+            "request": "launch",
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+              ],
+            "runtimeArgs": [
+              // "--trace-warnings",
+              "--inspect-brk",
+              "${workspaceRoot}/node_modules/jest/bin/jest",
+              "--runInBand",
+              "--coverage",
+              "--config=./jest-e2e.json"
+            ],
+            "skipFiles": ["<node_internals>/**", "${workspaceRoot}/node_modules/**/*.js"],
+            "outputCapture": "std",
+        }
+    ]
+  }
