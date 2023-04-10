@@ -4,20 +4,26 @@ import { ConfigModule, ConfigService } from '@nestjs/config/dist';
 import { CrawlerApiModule } from './crawler-api/crawler-api.module';
 import { ScraperModule } from './scraper/scraper.module';
 import { BlobHandlerModule } from './blob-handler/blob-handler.module';
+import { ExternalServicesModule } from './external-services/external-services.module';
+import config from './config/configuration';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [config],
+    }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('DATABASE_URL'),
+        uri: configService.get<string>('databaseURL'),
       }),
     }),
     CrawlerApiModule,
     ScraperModule,
     BlobHandlerModule,
+    ExternalServicesModule,
   ],
   controllers: [],
   providers: [],

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-export class ScrapingUtils {
+export class UrlUtils {
   /**
    * checks if a string passed to it is a valid URL
    * @param urlString
@@ -29,5 +29,10 @@ export class ScrapingUtils {
       return false;
     }
     return url.host === currentHost;
+  }
+
+  static getURLHost(urlString: string): string {
+    const url = new URL(urlString);
+    return url.host;
   }
 }

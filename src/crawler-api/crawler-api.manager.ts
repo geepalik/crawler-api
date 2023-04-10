@@ -18,17 +18,30 @@ export class CrawlerApiManager {
 
   async crawl(crawlDto: CrawlDto) {
     const { url } = crawlDto;
+
+    //should check if the domain has been crawled already or not
+    //get data from db
+    //1. if it exists dont crawl
+    //2. user a new property, checksum:
+    //it is created by making a hash of all the links we get from crawling
+    //when first crawling a url, save it to db
+    //when crawling, if url is same and checksum is same (no new links have been added)
+    //dont crawl and go further, throw error and return message
+
     const crawlData: CrawlDataDto = await this.scraperManager.getCrawlingData(
       url,
     );
 
     const saveBlobData: SaveDataBlobDto = {
+      url,
       screenshot: crawlData.screenshot,
       styles: crawlData.styles,
       scripts: crawlData.scripts,
     };
-    const { screenshot, scripts, stylesheets, links, outgoingLinks } =
+    const { screenshot, scripts, stylesheets } =
       await this.blobHandlerManager.saveDataToBlob(saveBlobData);
+
+    const { links, outgoingLinks } = crawlData.urls;
 
     const saveCrawlData: SaveCrawlDataDto = {
       url,

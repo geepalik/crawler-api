@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as puppeteer from 'puppeteer';
-import { ScrapingUtils } from 'src/utils/scraping-utils';
+import { UrlUtils } from 'src/utils/url-utils';
 import { CrawlDataDto } from './dto/crawl-data.dto';
 import { LinksDto } from './dto/links.dto';
 import { StylesScriptsDto } from './dto/styles-scripts.dto';
@@ -45,9 +45,9 @@ export class ScraperService {
     const links = [],
       outgoingLinks = [];
     domainLinks
-      .filter((link) => ScrapingUtils.isValidUrl(link))
+      .filter((link) => UrlUtils.isValidUrl(link))
       .forEach((link) => {
-        if (ScrapingUtils.isSameHost(link, this.currentUrlInfo.host)) {
+        if (UrlUtils.isSameHost(link, this.currentUrlInfo.host)) {
           links.push(link);
         } else {
           outgoingLinks.push(link);

@@ -8,7 +8,9 @@ import { SaveDataBlobDto } from './dto/save-data-blob.dto';
 export class BlobHandlerManager {
   constructor(private blobHandlerService: BlobHandlerService) {}
 
-  saveDataToBlob(saveDataBlobDto: SaveDataBlobDto): ReturnedBlobDataDto {
+  saveDataToBlob(
+    saveDataBlobDto: SaveDataBlobDto,
+  ): Promise<ReturnedBlobDataDto> {
     return this.blobHandlerService.saveDataToBlob(saveDataBlobDto);
   }
 }
