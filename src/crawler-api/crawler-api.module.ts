@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { BlobHandlerModule } from 'src/blob-handler/blob-handler.module';
 import { ScraperModule } from 'src/scraper/scraper.module';
 import Consts from 'src/utils/consts/consts';
 import { CrawlerApiController } from './crawler-api.controller';
+import { CrawlerApiDao } from './crawler-api.dao';
 import { CrawlerApiManager } from './crawler-api.manager';
 import { CrawlerApiService } from './crawler-api.service';
 import { crawlingData } from './schemas/crawling-data.schema';
@@ -16,8 +18,9 @@ import { crawlingData } from './schemas/crawling-data.schema';
       },
     ]),
     ScraperModule,
+    BlobHandlerModule,
   ],
   controllers: [CrawlerApiController],
-  providers: [CrawlerApiService, CrawlerApiManager],
+  providers: [CrawlerApiDao, CrawlerApiService, CrawlerApiManager],
 })
 export class CrawlerApiModule {}

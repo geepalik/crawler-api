@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config/dist';
 import { CrawlerApiModule } from './crawler-api/crawler-api.module';
 import { ScraperModule } from './scraper/scraper.module';
+import { BlobHandlerModule } from './blob-handler/blob-handler.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ScraperModule } from './scraper/scraper.module';
     }),
     CrawlerApiModule,
     ScraperModule,
+    BlobHandlerModule,
   ],
   controllers: [],
   providers: [],
