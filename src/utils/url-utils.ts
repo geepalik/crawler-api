@@ -35,4 +35,8 @@ export class UrlUtils {
     const url = new URL(urlString);
     return url.host;
   }
+
+  static getURLFileName(urlString: string): string {
+    return urlString.split('/').pop().split('?')[0];
+  }
 }

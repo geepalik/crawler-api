@@ -53,7 +53,10 @@ export class ScraperService {
           outgoingLinks.push(link);
         }
       });
-    return { links, outgoingLinks };
+    return {
+      links: this.eliminiateDuplicateLinks(links),
+      outgoingLinks: this.eliminiateDuplicateLinks(outgoingLinks),
+    };
   }
 
   private async getStyles(page: puppeteer.Page): Promise<StylesScriptsDto> {
@@ -63,7 +66,10 @@ export class ScraperService {
     const inlineStyles = await page.$$eval('style', (styles) =>
       styles.map((style) => style.textContent),
     );
-    return { links: linkStyles, inline: inlineStyles };
+    return {
+      links: this.eliminiateDuplicateLinks(linkStyles),
+      inline: inlineStyles,
+    };
   }
 
   private async getScripts(page: puppeteer.Page): Promise<StylesScriptsDto> {
@@ -79,6 +85,12 @@ export class ScraperService {
       });
       return { links, inline };
     });
+    results.links = this.eliminiateDuplicateLinks(results.links);
     return results;
+  }
+
+  private eliminiateDuplicateLinks(links: Array<string>): Array<string> {
+    const arraySet = new Set(links);
+    return Array.from(arraySet);
   }
 }

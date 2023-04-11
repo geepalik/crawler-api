@@ -23,15 +23,15 @@ export class HttpApiService {
 
   private async get(url: string, config: unknown): Promise<any> {
     try {
-      return this.httpService.get(url, config);
+      return this.httpService.axiosRef.get(url, config);
     } catch (error) {
       this.handleBadRequestError(error);
     }
   }
 
-  getContentsAsArrayBuffer(url: string): Promise<any> {
+  getRemoteFileContent(url: string): Promise<any> {
     const config = {
-      responseType: 'arraybuffer',
+      responseType: 'stream',
     };
     return this.get(url, config);
   }

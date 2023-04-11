@@ -27,7 +27,7 @@ export class BlobHandlerService {
 
       this.websiteName = UrlUtils.getURLHost(url);
 
-      //remove directory if already exists
+      //remove directory if already exists for incoming url
       await this.localFileHandlerService.removeExistingDirectory(
         this.getTargetDirFileFullPath(),
       );
@@ -82,22 +82,35 @@ export class BlobHandlerService {
    * @param contents: Buffer
    * @returns {Promise<string>}
    */
-  saveScreenshot(contents: Buffer): Promise<string> {
+  async saveScreenshot(contents: Buffer): Promise<string> {
     const fileName = this.websiteName + '_screenshot.png';
     const { filePath, fileNameFullPath } = this.getSaveFileFullPath(fileName);
-    return this.localFileHandlerService.createFile(
+    await this.localFileHandlerService.createFile(
       filePath,
       fileNameFullPath,
       contents,
     );
+    return fileNameFullPath;
   }
 
-  saveInlineLinkAsFile(
+  private async saveInlinesFile(
     filePath: string,
     fileNameFullPath: string,
     content: string,
-  ): Promise<string> {
-    return this.localFileHandlerService.createFile(
+  ): Promise<void> {
+    await this.localFileHandlerService.createFile(
+      filePath,
+      fileNameFullPath,
+      content,
+    );
+  }
+
+  private async saveLinkAsFile(
+    filePath: string,
+    fileNameFullPath: string,
+    content: any,
+  ): Promise<void> {
+    await this.localFileHandlerService.saveStreamToFile(
       filePath,
       fileNameFullPath,
       content,
@@ -136,6 +149,10 @@ export class BlobHandlerService {
     };
   }
 
+  private getRemoteContent(link: string): Promise<any> {
+    return this.httpApiService.getRemoteFileContent(link);
+  }
+
   async saveStyleScriptsData(
     contents: StylesScriptsDto,
     folderType: string,
@@ -152,62 +169,36 @@ export class BlobHandlerService {
     //links: get remote content for each, save to file, return path
     //inline: save each of them to file, return path
     //call file-handling.service method
-
-    //styles path:
-    //"C:\\node_apps\\crawler-api\\files\\www.sellersnap.io\\styles\\1.css"
-    //name of file for link
     const results = [];
     let i = 1;
     for (const inlineContent of contents.inline) {
-      //define name and full path
-      //send to localFileHandlerService.createFile
-      //push full path name to array
       const { filePath, fileNameFullPath } = this.getInlineFileName(
         i,
         folderType,
         fileType,
       );
-      await this.saveInlineLinkAsFile(
-        filePath,
-        fileNameFullPath,
-        inlineContent,
-      );
+      await this.saveInlinesFile(filePath, fileNameFullPath, inlineContent);
       results.push(fileNameFullPath);
       i++;
     }
 
-    //TODO below
-    //need to read contents of remote link
-    //and write to disk as stream
-    //const linksContentPromises = [];
-    const linkData = [];
     for (const link of contents.links) {
-      /*
-      linksContentPromises.push(
-        this.httpApiService.getContentsAsArrayBuffer(link),
-      );
-      */
-      const data = await this.httpApiService.getContentsAsArrayBuffer(link);
-      linkData.push(data);
+      try {
+        const data = await this.getRemoteContent(link);
+        const { filePath, fileNameFullPath } = this.getRemoteContentFileName(
+          UrlUtils.getURLFileName(link),
+          folderType,
+          fileType,
+        );
+        await this.saveLinkAsFile(filePath, fileNameFullPath, data);
+        results.push(fileNameFullPath);
+      } catch (error) {
+        //TODO: Proper Logging w/ winston through module and service
+        console.log(
+          `Error getting data from link: ${link} for website ${this.websiteName}: ${error.message}`,
+        );
+      }
     }
-
-    //const linkData: any = await Promise.allSettled(linksContentPromises);
-
-    for (const linkDataResponse of linkData) {
-      const content = linkDataResponse.data;
-      const originalLink = linkDataResponse.request.path;
-      const { filePath, fileNameFullPath } = this.getRemoteContentFileName(
-        originalLink,
-        folderType,
-        fileType,
-      );
-      await this.saveInlineLinkAsFile(filePath, fileNameFullPath, content);
-      results.push(fileNameFullPath);
-    }
-
-    //return ['path1', 'path2', 'path3'];
     return results;
   }
-
-  //private async getRemoteContent(link: string) {}
 }

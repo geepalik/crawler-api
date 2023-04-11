@@ -19,6 +19,7 @@ export class CrawlerApiManager {
   async crawl(crawlDto: CrawlDto) {
     const { url } = crawlDto;
 
+    //TODO:
     //should check if the domain has been crawled already or not
     //get data from db
     //1. if it exists dont crawl
