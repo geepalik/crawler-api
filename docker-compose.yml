@@ -14,11 +14,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - .:/app
-      - /app/node_modules
     ports:
-      - 3001:${PORT}
+      - ${EXTERNAL_PORT}:${PORT}
     env_file:
       - .env
     depends_on:
