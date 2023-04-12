@@ -13,8 +13,18 @@ export class CrawlerApiDao {
     private readonly crawlingDataModel: Model<CrawlingDataModel>,
   ) {}
 
-  createCrawlingData(payload: SaveCrawlDataDto) {
-    const crawlingData = new this.crawlingDataModel(payload);
-    return crawlingData.save();
+  /**
+   * creates new document in crawlingData collection for a URL
+   * if it already exists in collection, it will update the document with data it crawled
+   */
+  createCrawlingData(payload: SaveCrawlDataDto): Promise<CrawlingDataModel> {
+    const { url, screenshot, stylesheets, scripts, links, outgoingLinks } =
+      payload;
+
+    return this.crawlingDataModel.findOneAndUpdate(
+      { url },
+      { screenshot, stylesheets, scripts, links, outgoingLinks },
+      { upsert: true, new: true },
+    );
   }
 }

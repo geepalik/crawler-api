@@ -27,10 +27,7 @@ export class BlobHandlerService {
 
       this.websiteName = UrlUtils.getURLHost(url);
 
-      //remove directory if already exists for incoming url
-      await this.localFileHandlerService.removeExistingDirectory(
-        this.getTargetDirFileFullPath(),
-      );
+      await this.removecurrentURLExistingDirectory();
 
       const screenshotPath = await this.saveScreenshot(screenshot);
 
@@ -56,6 +53,20 @@ export class BlobHandlerService {
     }
   }
 
+  /**
+   * remove directory if already exists for incoming url
+   */
+  private async removecurrentURLExistingDirectory(): Promise<void> {
+    await this.localFileHandlerService.removeExistingDirectory(
+      this.getTargetDirFileFullPath(),
+    );
+  }
+
+  /**
+   *
+   * @param extraPath
+   * @returns
+   */
   private getTargetDirFileFullPath(extraPath?: string): string {
     extraPath = extraPath || '';
     return path.join(
@@ -153,22 +164,24 @@ export class BlobHandlerService {
     return this.httpApiService.getRemoteFileContent(link);
   }
 
+  /**
+   * create sub dir for the current folder type
+   * e.g. host/scripts
+   * @param folderType
+   */
+  private async createSubDir(folderType: string): Promise<void> {
+    await this.localFileHandlerService.createSubDir(
+      this.getTargetDirFileFullPath(`/${folderType}`),
+    );
+  }
+
   async saveStyleScriptsData(
     contents: StylesScriptsDto,
     folderType: string,
     fileType: string,
   ): Promise<string[]> {
-    //first create folder
-    //C:\\node_apps\\crawler-api\\files\\www.sellersnap.io\\styles
-    //OR
-    //C:\\node_apps\\crawler-api\\files\\www.sellersnap.io\\scripts
-    await this.localFileHandlerService.createSubDir(
-      this.getTargetDirFileFullPath(`/${folderType}`),
-    );
+    await this.createSubDir(folderType);
 
-    //links: get remote content for each, save to file, return path
-    //inline: save each of them to file, return path
-    //call file-handling.service method
     const results = [];
     let i = 1;
     for (const inlineContent of contents.inline) {
