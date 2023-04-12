@@ -5,13 +5,24 @@ import * as fs from 'fs';
 
 @Injectable()
 export class LocalFileHandlerService {
-  async removeExistingDirectory(path: string) {
+  async removeExistingDirectory(path: string): Promise<void> {
     try {
       const dirExists = await this.checkIfFileOrDirectoryExists(path);
       if (dirExists) {
         await fs.promises.rmdir(path, { recursive: true });
       }
     } catch (error) {
+      throw new ForbiddenException(error);
+    }
+  }
+
+  async initRootDirectory(path: string): Promise<void>{
+    try{
+      const dirExists = await this.checkIfFileOrDirectoryExists(path);
+      if(!dirExists){
+        await this.createDir(path);
+      }  
+    }catch(error){
       throw new ForbiddenException(error);
     }
   }
@@ -25,7 +36,7 @@ export class LocalFileHandlerService {
     }
   }
 
-  async createSubDir(path: string): Promise<void> {
+  async createDir(path: string): Promise<void> {
     try {
       await fs.promises.mkdir(path);
     } catch (error) {

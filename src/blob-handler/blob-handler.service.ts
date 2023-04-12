@@ -27,7 +27,7 @@ export class BlobHandlerService {
 
       this.websiteName = UrlUtils.getURLHost(url);
 
-      await this.removecurrentURLExistingDirectory();
+      await this.initFilesDir();
 
       const screenshotPath = await this.saveScreenshot(screenshot);
 
@@ -51,6 +51,12 @@ export class BlobHandlerService {
     } catch (error) {
       throw new HttpException(error, HttpStatus.UNPROCESSABLE_ENTITY);
     }
+  }
+
+  private async initFilesDir(): Promise<void>{
+    const filesPath = path.join(__dirname,`../../${this.configService.get<string>('localFilesPath')}`);
+    await this.localFileHandlerService.initRootDirectory(filesPath);
+    await this.removecurrentURLExistingDirectory();
   }
 
   /**
@@ -170,7 +176,7 @@ export class BlobHandlerService {
    * @param folderType
    */
   private async createSubDir(folderType: string): Promise<void> {
-    await this.localFileHandlerService.createSubDir(
+    await this.localFileHandlerService.createDir(
       this.getTargetDirFileFullPath(`/${folderType}`),
     );
   }
