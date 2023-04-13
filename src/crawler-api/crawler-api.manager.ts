@@ -6,7 +6,9 @@ import { CrawlDataDto } from 'src/scraper/dto/crawl-data.dto';
 import { ScraperManager } from 'src/scraper/scraper.manager';
 import { CrawlerApiService } from './crawler-api.service';
 import { CrawlDto } from './dto/crawl.dto';
+import { GetCrawlingDataByUrlDto } from './dto/get-crawling-data-by-url.dto';
 import { SaveCrawlDataDto } from './dto/save-crawl-data.dto';
+import { CrawlingDataModel } from './schemas/crawling-data.schema';
 
 @Injectable()
 export class CrawlerApiManager {
@@ -43,5 +45,15 @@ export class CrawlerApiManager {
       outgoingLinks,
     };
     return this.crawlerApiService.createCrawlingData(saveCrawlData);
+  }
+
+  getCrawlingData(): Promise<CrawlingDataModel[]> {
+    return this.crawlerApiService.getCrawlingData();
+  }
+
+  getCrawlingDataByUrl(
+    payload: GetCrawlingDataByUrlDto,
+  ): Promise<CrawlingDataModel> {
+    return this.crawlerApiService.getCrawlingDataByUrl(payload);
   }
 }
