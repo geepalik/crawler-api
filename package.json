@@ -1,8 +1,8 @@
 {
   "name": "crawler-api",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "1.0.0",
+  "description": "Crawling API, using Puppeteer and Docker",
+  "author": "Gil Palikaras",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
