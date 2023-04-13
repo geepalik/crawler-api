@@ -12,7 +12,10 @@ export class ScraperService {
     let browser;
     try {
       //instantiate browser
-      browser = await puppeteer.launch();
+      browser = await puppeteer.launch({
+        executablePath: process.env.CHROMIUM_PATH,
+        args: ['--no-sandbox'],
+      });
       //create page and go to url
       const page = await browser.newPage();
       await page.goto(url);
@@ -26,6 +29,8 @@ export class ScraperService {
 
       return { screenshot, urls, styles, scripts };
     } catch (error) {
+      //TODO: Proper Logging w/ winston through module and service
+      console.log(error);
       throw new HttpException(error, HttpStatus.UNPROCESSABLE_ENTITY);
     } finally {
       await browser?.close();
