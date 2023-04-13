@@ -30,7 +30,7 @@ Crawl a domain (POST):
     In request body, add a url:
 
 {
-    "url": "https://www.sellersnap.io/"
+    "url": "https://www.mobilda.com/"
 }
 
 It will return the document in the collection crawlingData
