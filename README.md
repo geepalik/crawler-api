@@ -44,7 +44,7 @@ It will return an array of all records in collection crawlingData
 
 Get crawling data for a specific URL saved in the database (GET):
     
-    localhost:8081/crawler-api/crawling-data/https%3A%2F%2Fmobildaa.com%2F
+    localhost:8081/crawler-api/crawling-data/https%3A%2F%2Fmobilda.com%2F
 
 It will return data for the url passed in the params (must have been encoded in client with encodeURIComponent())
 If it's an unknown URL that has not been crawled by the system, a 404 response will be returned instead.

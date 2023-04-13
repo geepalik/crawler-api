@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as puppeteer from 'puppeteer';
 import { UrlUtils } from 'src/utils/url-utils';
