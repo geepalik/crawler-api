@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config/dist';
@@ -17,7 +18,7 @@ import config from './config/configuration';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('databaseURL'),
+        uri: configService.get<string>('databaseContainerURL'),
       }),
     }),
     CrawlerApiModule,

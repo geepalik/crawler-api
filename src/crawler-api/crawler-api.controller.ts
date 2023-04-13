@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { JoiValidationPipe } from 'src/utils/validations/joi-validation.pipe';
 import { CrawlerApiManager } from './crawler-api.manager';
 import { CrawlRequest } from './dto/request/crawl.request';
@@ -14,5 +15,10 @@ export class CrawlerApiController {
     crawlRequest: CrawlRequest,
   ) {
     return this.crawlerApiManager.crawl(crawlRequest);
+  }
+
+  @Get('crawls')
+  getCrawls(){
+    return {message:'OK!'}
   }
 }

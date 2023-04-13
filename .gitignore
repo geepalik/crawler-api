@@ -36,5 +36,5 @@ lerna-debug.log*
 
 # Config
 .env
-
+#local files folder
 files/
