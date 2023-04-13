@@ -27,7 +27,8 @@ The main URL for requests is this:
 Crawl a domain (POST):
 
     http://localhost:8081/crawler-api/crawl
-    In request body, add a url:
+
+In request body, add a url:
 
 {
     "url": "https://www.mobilda.com/"
