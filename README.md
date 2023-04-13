@@ -47,4 +47,3 @@ Get crawling data for a specific URL saved in the database (GET):
 
 It will return data for the url passed in the params (must have been encoded in client with encodeURIComponent())
 If it's an unknown URL that has not been crawled by the system, a 404 response will be returned instead.
-```
