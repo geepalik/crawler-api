@@ -13,7 +13,7 @@ Rename .env.example to .env
 
 Run Docker containers
 -----
-In the project root directory run this to create image:
+In the project root directory run this to create containers and run them in background:
 -----
     docker-compose up -d --build 
 
